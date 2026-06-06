@@ -262,8 +262,8 @@
                         </div>
                     </div>
 
-                    <a href="#contact" class="text-sm font-medium text-slate-600 hover:text-red-600 transition">Contact
-                        Us</a>
+                    <!-- <a href="#contact" class="text-sm font-medium text-slate-600 hover:text-red-600 transition">Contact
+                        Us</a> -->
                 </div>
 
                 <!-- Desktop CTAs (Portal Actions) -->
@@ -1128,12 +1128,12 @@
         // ── Contact Form → Formspree (gyancode3@gmail.com) ───────────────────
         document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const form    = e.target;
-            const btn     = document.getElementById('contactSubmitBtn');
-            const status  = document.getElementById('contactStatus');
-            const first   = document.getElementById('contactFirst').value.trim();
-            const last    = document.getElementById('contactLast').value.trim();
-            const email   = document.getElementById('contactEmail').value.trim();
+            const form = e.target;
+            const btn = document.getElementById('contactSubmitBtn');
+            const status = document.getElementById('contactStatus');
+            const first = document.getElementById('contactFirst').value.trim();
+            const last = document.getElementById('contactLast').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
             const service = document.getElementById('contactService').value.trim();
             const message = document.getElementById('contactMessage').value.trim();
 
@@ -1153,9 +1153,9 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({
-                        name:     `${first} ${last}`.trim(),
+                        name: `${first} ${last}`.trim(),
                         email,
-                        service:  service || 'General Inquiry',
+                        service: service || 'General Inquiry',
                         message,
                         _subject: `GyanCode Inquiry from ${first} ${last}`.trim()
                     })
