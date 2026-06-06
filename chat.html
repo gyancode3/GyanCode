@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MentorGuru | Chat & Messaging</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .heading-font { font-family: 'Outfit', sans-serif; }
+        
+        .chat-container { height: calc(100vh - 80px); overflow: hidden; }
+        .messages-container { height: calc(100vh - 200px); overflow-y: auto; }
+        .message-bubble { max-width: 70%; word-wrap: break-word; }
+        .message-own { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+        .message-other { background: #e5e7eb; }
+        .chat-sidebar { width: 320px; border-right: 1px solid #e5e7eb; }
+        .group-avatar { width: 48px; height: 48px; border-radius: 12px; }
+        .upload-btn { cursor: pointer; transition: all 0.2s; }
+        .upload-btn:hover { transform: scale(1.1); }
+        .file-preview { max-width: 300px; border-radius: 8px; }
+        .notification-badge { position: absolute; top: 0; right: 0; background: #dc2626; }
+        .typing-indicator { display: flex; gap: 4px; align-items: center; }
+        .typing-dot { width: 8px; height: 8px; border-radius: 50%; background: #9ca3af; animation: typing 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { opacity: 0.5; } 30% { opacity: 1; } }
+        
+        .anim-fadein { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f8fafc; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <div id="chatApp" class="min-h-screen flex flex-col">
+        <!-- Top Navigation -->
+        <div class="bg-white border-b border-slate-200 sticky top-0 z-50">
+            <div class="max-w-screen-2xl mx-auto px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="text-2xl font-bold heading-font">
+                        <span class="bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">Mentor</span><span class="text-slate-800">Guru</span>
+                    </a>
+                    <span class="text-sm text-slate-500">| Messaging Center</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <div class="text-sm">
+                        <div class="text-slate-800 font-semibold" id="currentUserName">Loading...</div>
+                        <div class="text-xs text-slate-500" id="currentUserRole">User</div>
+                    </div>
+                    <button onclick="logout()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">
+                        <i class="fa-solid fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Chat Sidebar -->
+            <div class="chat-sidebar bg-white overflow-y-auto">
+                <div class="p-4 space-y-3">
+                    <!-- Search -->
+                    <div class="relative">
+                        <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-sm"></i>
+                        <input type="text" id="searchChats" placeholder="Search conversations..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+
+                    <!-- New Chat Button (for Mentors) -->
+                    <button id="newGroupChatBtn" onclick="openNewGroupChatModal()" class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-2.5 rounded-lg text-sm font-semibold transition hidden">
+                        <i class="fa-solid fa-plus mr-2"></i>New Group Chat
+                    </button>
+
+                    <!-- Active Chats List -->
+                    <div id="chatsList" class="space-y-2">
+                        <div class="text-center py-8 text-slate-500 text-sm">
+                            <i class="fa-solid fa-inbox text-2xl mb-2 block"></i>
+                            No conversations yet
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Main Area -->
+            <div class="flex-1 flex flex-col bg-white">
+                <!-- No Chat Selected -->
+                <div id="noChatSelected" class="flex-1 flex items-center justify-center text-center">
+                    <div>
+                        <i class="fa-solid fa-comments text-6xl text-slate-300 mb-4 block"></i>
+                        <h3 class="text-slate-500 font-semibold text-lg mb-1">Start a Conversation</h3>
+                        <p class="text-slate-400 text-sm">Select a chat or create a new group to begin messaging</p>
+                    </div>
+                </div>
+
+                <!-- Chat Window -->
+                <div id="chatWindow" class="hidden flex flex-col h-full">
+                    <!-- Chat Header -->
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 border-b border-red-200 px-6 py-4 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-slate-800" id="chatTitle">Chat Title</h3>
+                            <p class="text-xs text-slate-600" id="chatSubtitle">Subtitle</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="toggleChatInfo()" class="p-2 hover:bg-white rounded-lg transition text-slate-600">
+                                <i class="fa-solid fa-info-circle"></i>
+                            </button>
+                            <button onclick="closeChat()" class="p-2 hover:bg-white rounded-lg transition text-slate-600">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Messages -->
+                    <div class="messages-container flex-1 p-6 space-y-4 bg-gradient-to-b from-white to-slate-50" id="messagesArea">
+                        <!-- Messages will be inserted here -->
+                    </div>
+
+                    <!-- Typing Indicator -->
+                    <div id="typingIndicator" class="hidden px-6 py-2 text-sm text-slate-500">
+                        <div class="flex gap-2 items-center">
+                            <span id="typingName">Someone</span> is typing
+                            <div class="typing-indicator ml-2">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="border-t border-slate-200 p-4 bg-white">
+                        <div class="flex gap-3">
+                            <input type="text" id="messageInput" placeholder="Type a message..." class="flex-1 px-4 py-3 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" onkeypress="handleMessageKeyPress(event)">
+                            <button onclick="uploadFile()" class="upload-btn p-3 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-600 transition" title="Attach file">
+                                <i class="fa-solid fa-paperclip"></i>
+                            </button>
+                            <button onclick="uploadImage()" class="upload-btn p-3 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-600 transition" title="Attach image">
+                                <i class="fa-solid fa-image"></i>
+                            </button>
+                            <button onclick="sendMessage()" class="p-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg transition font-semibold">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <!-- File Preview -->
+                        <div id="filePreview" class="hidden mt-3 p-3 bg-slate-50 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-file text-slate-400"></i>
+                                <span id="fileName" class="text-sm text-slate-700">file.pdf</span>
+                            </div>
+                            <button onclick="cancelFileUpload()" class="text-slate-400 hover:text-slate-600">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Info Sidebar -->
+            <div id="chatInfoPanel" class="hidden w-80 border-l border-slate-200 bg-white overflow-y-auto p-6">
+                <h3 class="font-semibold text-slate-800 mb-4">Conversation Details</h3>
+                <div id="chatInfoContent" class="space-y-4">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file inputs -->
+    <input type="file" id="fileInputFile" style="display:none" onchange="handleFileSelect(event)">
+    <input type="file" id="imageInputFile" style="display:none" accept="image/*" onchange="handleImageSelect(event)">
+
+    <!-- New Group Chat Modal -->
+    <div id="newGroupChatModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl w-96 p-6 shadow-xl">
+            <h3 class="text-xl font-bold text-slate-800 mb-4">Create New Group Chat</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Group Name *</label>
+                    <input type="text" id="groupNameInput" placeholder="e.g. Cybersecurity 101 - Batch A" class="w-full px-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Select Students *</label>
+                    <div id="studentsList" class="max-h-48 overflow-y-auto space-y-2 border border-slate-200 rounded-lg p-3">
+                        <!-- Students will be populated here -->
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button onclick="closeNewGroupChatModal()" class="flex-1 px-4 py-2 border border-slate-200 rounded-lg text-slate-700 font-semibold hover:bg-slate-50 transition">Cancel</button>
+                    <button onclick="createNewGroupChat()" class="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg font-semibold hover:from-red-700 hover:to-red-800 transition">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ CONSTANTS ============
+        const LS_STUDENTS = 'mentorGuru_students';
+        const LS_MENTORS = 'mentorGuru_mentors';
+        const LS_CHATS = 'mentorGuru_chats';
+        const LS_MESSAGES = 'mentorGuru_messages';
+        const LS_CURRENT_USER = 'mentorGuru_currentUser';
+
+        // ============ STATE ============
+        let currentUser = null;
+        let currentChat = null;
+        let allChats = [];
+        let allMessages = {};
+        let messagePollingInterval = null;
+
+        // ============ UTILITY FUNCTIONS ============
+        function lsGet(key, def = null) { return JSON.parse(localStorage.getItem(key) || JSON.stringify(def)); }
+        function lsSet(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+        function logout() {
+            localStorage.removeItem(LS_CURRENT_USER);
+            window.location.href = 'index.html';
+        }
+
+        // ============ INITIALIZATION ============
+        function init() {
+            currentUser = lsGet(LS_CURRENT_USER);
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('currentUserName').textContent = currentUser.name;
+            document.getElementById('currentUserRole').textContent = currentUser.role;
+
+            // Show new group chat button only for mentors
+            if (currentUser.role === 'Mentor') {
+                document.getElementById('newGroupChatBtn').classList.remove('hidden');
+            }
+
+            loadChats();
+            startMessagePolling();
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('searchChats').addEventListener('input', (e) => filterChats(e.target.value));
+        }
+
+        // ============ CHAT MANAGEMENT ============
+        function loadChats() {
+            allChats = lsGet(LS_CHATS, []);
+            allMessages = lsGet(LS_MESSAGES, {});
+
+            // Filter chats based on current user
+            let userChats = allChats.filter(chat => {
+                if (currentUser.role === 'Mentor') {
+                    return chat.createdBy === currentUser.loginId;
+                } else {
+                    return chat.participants.includes(currentUser.loginId);
+                }
+            });
+
+            renderChatsList(userChats);
+        }
+
+        function renderChatsList(chats) {
+            const chatsList = document.getElementById('chatsList');
+            
+            if (chats.length === 0) {
+                chatsList.innerHTML = `
+                    <div class="text-center py-8 text-slate-500 text-sm">
+                        <i class="fa-solid fa-inbox text-2xl mb-2 block"></i>
+                        No conversations yet
+                    </div>
+                `;
+                return;
+            }
+
+            chatsList.innerHTML = chats.map((chat, idx) => {
+                const unreadCount = (chat.unreadBy && chat.unreadBy[currentUser.loginId]) || 0;
+                const lastMessage = chat.lastMessage || 'No messages yet';
+                const participants = chat.isGroupChat ? `${chat.participants.length} members` : 'Direct message';
+                
+                return `
+                    <div onclick="selectChat(${idx})" class="p-3 rounded-lg hover:bg-slate-100 cursor-pointer transition border border-slate-200 hover:border-red-300 relative">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-semibold text-slate-800 truncate">${chat.name}</h4>
+                                <p class="text-xs text-slate-500 truncate">${participants}</p>
+                                <p class="text-sm text-slate-600 truncate mt-1">${lastMessage}</p>
+                            </div>
+                            ${unreadCount > 0 ? `<span class="notification-badge text-white text-xs font-bold px-2 py-1 rounded-full">${unreadCount}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectChat(idx) {
+            currentChat = allChats[idx];
+            currentChat.idx = idx;
+            renderChatWindow();
+            document.getElementById('noChatSelected').classList.add('hidden');
+            document.getElementById('chatWindow').classList.remove('hidden');
+            loadChatMessages();
+            clearUnreadCount();
+        }
+
+        function closeChat() {
+            currentChat = null;
+            document.getElementById('noChatSelected').classList.remove('hidden');
+            document.getElementById('chatWindow').classList.add('hidden');
+            document.getElementById('chatInfoPanel').classList.add('hidden');
+        }
+
+        function renderChatWindow() {
+            document.getElementById('chatTitle').textContent = currentChat.name;
+            
+            if (currentChat.isGroupChat) {
+                const studentCount = currentChat.participants.length - 1; // Exclude mentor
+                document.getElementById('chatSubtitle').textContent = `${studentCount} student${studentCount !== 1 ? 's' : ''} • Group Chat`;
+            } else {
+                document.getElementById('chatSubtitle').textContent = 'Direct Message';
+            }
+        }
+
+        // ============ MESSAGE FUNCTIONS ============
+        function loadChatMessages() {
+            const chatKey = `chat_${currentChat.id}`;
+            const messages = lsGet(chatKey, []);
+            renderMessages(messages);
+        }
+
+        function renderMessages(messages) {
+            const messagesArea = document.getElementById('messagesArea');
+            
+            if (messages.length === 0) {
+                messagesArea.innerHTML = `
+                    <div class="flex items-center justify-center h-full">
+                        <div class="text-center">
+                            <i class="fa-solid fa-comments text-4xl text-slate-300 mb-3 block"></i>
+                            <p class="text-slate-500">No messages yet. Start the conversation!</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            messagesArea.innerHTML = messages.map(msg => {
+                const isOwn = msg.senderId === currentUser.loginId;
+                return `
+                    <div class="flex ${isOwn ? 'justify-end' : 'justify-start'} anim-fadein">
+                        <div class="max-w-xs">
+                            ${!isOwn ? `<p class="text-xs text-slate-600 mb-1">${msg.senderName}</p>` : ''}
+                            ${msg.type === 'text' ? `
+                                <div class="message-bubble ${isOwn ? 'message-own' : 'message-other'} text-${isOwn ? 'white' : 'slate-800'} px-4 py-3 rounded-xl">
+                                    ${escapeHtml(msg.content)}
+                                </div>
+                            ` : msg.type === 'image' ? `
+                                <img src="${msg.content}" alt="shared image" class="file-preview mb-2">
+                                <div class="text-xs text-slate-500 mb-2">${msg.senderName}</div>
+                            ` : msg.type === 'file' ? `
+                                <div class="message-bubble ${isOwn ? 'message-own' : 'message-other'} px-4 py-3 rounded-xl flex items-center gap-2">
+                                    <i class="fa-solid fa-file text-lg"></i>
+                                    <div>
+                                        <p class="text-sm font-semibold">${msg.fileName}</p>
+                                        <a href="${msg.content}" download class="text-xs underline hover:no-underline">Download</a>
+                                    </div>
+                                </div>
+                            ` : msg.type === 'announcement' ? `
+                                <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-400 px-4 py-3 rounded text-amber-800 text-sm">
+                                    <p class="font-semibold">📢 Announcement</p>
+                                    <p class="mt-1">${escapeHtml(msg.content)}</p>
+                                </div>
+                            ` : ''}
+                            <p class="text-xs text-slate-500 mt-1 ${isOwn ? 'text-right' : ''}">
+                                ${new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Scroll to bottom
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+
+            if (!content && !window.selectedFile) {
+                alert('Please enter a message or select a file');
+                return;
+            }
+
+            const message = {
+                id: Date.now(),
+                chatId: currentChat.id,
+                senderId: currentUser.loginId,
+                senderName: currentUser.name,
+                type: window.selectedFile ? (window.selectedFile.type === 'image' ? 'image' : 'file') : 'text',
+                content: window.selectedFile ? window.selectedFile.content : content,
+                fileName: window.selectedFile ? window.selectedFile.name : null,
+                timestamp: new Date().toISOString(),
+                read: false
+            };
+
+            const chatKey = `chat_${currentChat.id}`;
+            const messages = lsGet(chatKey, []);
+            messages.push(message);
+            lsSet(chatKey, messages);
+
+            // Update chat last message
+            currentChat.lastMessage = message.type === 'text' ? message.content : `Shared ${message.type}`;
+            allChats[currentChat.idx] = currentChat;
+            lsSet(LS_CHATS, allChats);
+
+            input.value = '';
+            window.selectedFile = null;
+            document.getElementById('filePreview').classList.add('hidden');
+            loadChatMessages();
+        }
+
+        function handleMessageKeyPress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // ============ FILE UPLOAD FUNCTIONS ============
+        function uploadFile() {
+            document.getElementById('fileInputFile').click();
+        }
+
+        function uploadImage() {
+            document.getElementById('imageInputFile').click();
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    window.selectedFile = {
+                        type: 'file',
+                        name: file.name,
+                        content: event.target.result
+                    };
+                    showFilePreview(file.name);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleImageSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    window.selectedFile = {
+                        type: 'image',
+                        name: file.name,
+                        content: event.target.result
+                    };
+                    showFilePreview(file.name);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showFilePreview(fileName) {
+            document.getElementById('fileName').textContent = fileName;
+            document.getElementById('filePreview').classList.remove('hidden');
+        }
+
+        function cancelFileUpload() {
+            window.selectedFile = null;
+            document.getElementById('filePreview').classList.add('hidden');
+        }
+
+        // ============ GROUP CHAT MANAGEMENT ============
+        function openNewGroupChatModal() {
+            loadStudentsList();
+            document.getElementById('newGroupChatModal').classList.remove('hidden');
+        }
+
+        function closeNewGroupChatModal() {
+            document.getElementById('newGroupChatModal').classList.add('hidden');
+            document.getElementById('groupNameInput').value = '';
+        }
+
+        function loadStudentsList() {
+            const students = lsGet(LS_STUDENTS, []);
+            const studentsList = document.getElementById('studentsList');
+
+            if (students.length === 0) {
+                studentsList.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">No students available</p>';
+                return;
+            }
+
+            studentsList.innerHTML = students.map((student, idx) => `
+                <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded cursor-pointer">
+                    <input type="checkbox" value="${student.loginId}" class="student-checkbox w-4 h-4 rounded">
+                    <div>
+                        <p class="font-semibold text-sm text-slate-800">${student.name}</p>
+                        <p class="text-xs text-slate-600">${student.loginId}</p>
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        function createNewGroupChat() {
+            const groupName = document.getElementById('groupNameInput').value.trim();
+            const selectedStudents = Array.from(document.querySelectorAll('.student-checkbox:checked')).map(el => el.value);
+
+            if (!groupName) {
+                alert('Please enter a group name');
+                return;
+            }
+
+            if (selectedStudents.length === 0) {
+                alert('Please select at least one student');
+                return;
+            }
+
+            const newChat = {
+                id: Date.now(),
+                name: groupName,
+                isGroupChat: true,
+                createdBy: currentUser.loginId,
+                createdByName: currentUser.name,
+                participants: [currentUser.loginId, ...selectedStudents],
+                createdAt: new Date().toISOString(),
+                lastMessage: 'Group created',
+                unreadBy: {}
+            };
+
+            allChats.push(newChat);
+            lsSet(LS_CHATS, allChats);
+
+            // Create initial message
+            const chatKey = `chat_${newChat.id}`;
+            const initialMessage = {
+                id: Date.now(),
+                chatId: newChat.id,
+                senderId: currentUser.loginId,
+                senderName: currentUser.name,
+                type: 'announcement',
+                content: `${currentUser.name} created this group chat`,
+                timestamp: new Date().toISOString(),
+                read: true
+            };
+            lsSet(chatKey, [initialMessage]);
+
+            closeNewGroupChatModal();
+            loadChats();
+        }
+
+        // ============ CHAT INFO PANEL ============
+        function toggleChatInfo() {
+            const panel = document.getElementById('chatInfoPanel');
+            panel.classList.toggle('hidden');
+            
+            if (!panel.classList.contains('hidden')) {
+                renderChatInfo();
+            }
+        }
+
+        function renderChatInfo() {
+            const content = document.getElementById('chatInfoContent');
+            
+            let html = '';
+
+            if (currentChat.isGroupChat) {
+                html += `
+                    <div>
+                        <h4 class="font-semibold text-slate-700 mb-3">Members (${currentChat.participants.length})</h4>
+                        <div class="space-y-2">
+                `;
+
+                currentChat.participants.forEach(participantId => {
+                    const isMentor = participantId === currentChat.createdBy;
+                    html += `
+                        <div class="flex items-center justify-between p-2 bg-slate-50 rounded">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-800">${participantId}</p>
+                                <p class="text-xs text-slate-600">${isMentor ? 'Mentor' : 'Student'}</p>
+                            </div>
+                            ${isMentor ? '<i class="fa-solid fa-crown text-amber-500"></i>' : ''}
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+
+                if (currentUser.loginId === currentChat.createdBy) {
+                    html += `
+                        <div class="border-t pt-4">
+                            <button onclick="editGroupChat()" class="w-full px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold transition mb-2">
+                                <i class="fa-solid fa-edit mr-2"></i>Edit Group
+                            </button>
+                            <button onclick="deleteGroupChat()" class="w-full px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-sm font-semibold transition">
+                                <i class="fa-solid fa-trash mr-2"></i>Delete Group
+                            </button>
+                        </div>
+                    `;
+                }
+            } else {
+                html += `
+                    <div>
+                        <p class="text-sm text-slate-600">Direct message with another user</p>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+        }
+
+        function editGroupChat() {
+            // TODO: Implement edit functionality
+            alert('Edit group functionality coming soon');
+        }
+
+        function deleteGroupChat() {
+            if (!confirm('Are you sure you want to delete this group? This action cannot be undone.')) return;
+
+            allChats = allChats.filter((_, idx) => idx !== currentChat.idx);
+            lsSet(LS_CHATS, allChats);
+            
+            const chatKey = `chat_${currentChat.id}`;
+            localStorage.removeItem(chatKey);
+
+            closeChat();
+            loadChats();
+        }
+
+        function clearUnreadCount() {
+            const chatKey = `chat_${currentChat.id}`;
+            const messages = lsGet(chatKey, []);
+            messages.forEach(msg => msg.read = true);
+            lsSet(chatKey, messages);
+
+            currentChat.unreadBy = currentChat.unreadBy || {};
+            currentChat.unreadBy[currentUser.loginId] = 0;
+            allChats[currentChat.idx] = currentChat;
+            lsSet(LS_CHATS, allChats);
+        }
+
+        // ============ MESSAGE POLLING ============
+        function startMessagePolling() {
+            messagePollingInterval = setInterval(() => {
+                if (currentChat) {
+                    loadChatMessages();
+                }
+                loadChats(); // Refresh chat list
+            }, 1000);
+        }
+
+        // ============ UTILITY FUNCTIONS ============
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function filterChats(query) {
+            const filtered = allChats.filter(chat => 
+                chat.name.toLowerCase().includes(query.toLowerCase())
+            );
+            renderChatsList(filtered);
+        }
+
+        // ============ STARTUP ============
+        window.addEventListener('load', init);
+        window.addEventListener('beforeunload', () => clearInterval(messagePollingInterval));
+    </script>
+</body>
+</html>

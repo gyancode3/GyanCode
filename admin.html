@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MentorGuru | Superuser Command Center</title>
-    <meta name="description" content="MentorGuru administrative console for verifying and managing students and mentors.">
+    <title>GyanCode | Superuser Command Center</title>
+    <meta name="description" content="GyanCode administrative console for verifying and managing students and mentors.">
+    <link rel="icon" type="image/x-icon" href="Logo/Logo_2-removebg-preview.ico">
 
     <!-- Tailwind CSS & FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -110,7 +111,7 @@
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
             <h1 class="text-xl font-bold tracking-tight text-slate-900 heading-font uppercase">SOC Command Node</h1>
-            <p class="text-xs text-red-600 mt-1 uppercase tracking-widest">MentorGuru Security Operations Center</p>
+            <p class="text-xs text-red-600 mt-1 uppercase tracking-widest">GyanCode Security Operations Center</p>
         </div>
 
         <!-- Error banner -->
@@ -159,10 +160,10 @@
     <!-- =================== SIDEBAR =================== -->
     <aside class="w-64 bg-white border-r border-slate-200 flex flex-col z-20 flex-shrink-0">
         <div class="h-20 border-b border-slate-100 flex items-center px-6 gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20">
-                <i class="fa-solid fa-graduation-cap text-lg"></i>
+            <div class="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center">
+                <img src="Logo/Logo_2-removebg-preview.ico" alt="GyanCode" class="w-10 h-10 object-contain">
             </div>
-            <span class="text-lg font-bold tracking-tight heading-font text-slate-900">Mentor<span class="text-red-500">Guru</span></span>
+            <span class="text-lg font-bold tracking-tight heading-font text-slate-900">Gyan<span class="text-red-500">Code</span></span>
         </div>
         <div class="px-6 py-4 border-b border-slate-100 bg-slate-50">
             <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Access Scope</p>
@@ -719,52 +720,55 @@
         <form id="accountForm" onsubmit="handleSaveAccount(event)" class="space-y-4">
             <input type="hidden" id="accountEditRole">
             <input type="hidden" id="accountEditIndex">
-            <!-- Generated Credentials Banner -->
-            <div id="generatedCredsBanner" class="hidden p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200 space-y-3">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-600 flex items-center gap-2"><i class="fa-solid fa-key"></i> Auto-Generated Login Credentials</p>
-                <div class="grid grid-cols-2 gap-3">
+            <!-- Manual Credentials Entry Banner (Students) -->
+            <div id="manualCredentialsBanner" class="hidden p-4 rounded-2xl bg-blue-50 border border-blue-200 space-y-3">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-blue-600 flex items-center gap-2"><i class="fa-solid fa-keyboard"></i> Manual Login Credentials</p>
+                <div class="space-y-3">
                     <div>
-                        <p class="text-[9px] text-slate-400 uppercase tracking-wider mb-1">Login ID</p>
-                        <div class="flex items-center gap-2 p-2.5 bg-white rounded-xl border border-slate-200">
-                            <span id="displayLoginId" class="text-xs font-mono font-bold text-cyan-600 flex-1"></span>
-                            <button type="button" onclick="copyText('loginId')" id="copyLoginIdBtn" class="text-slate-400 hover:text-cyan-600 transition"><i class="fa-regular fa-copy text-xs"></i></button>
-                        </div>
+                        <label class="text-[9px] text-slate-400 uppercase tracking-wider mb-1.5 block">Student ID <span class="text-red-500">*</span></label>
+                        <input type="text" id="manualStudentId" name="manualStudentId" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-200 focus:border-blue-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition" placeholder="e.g. STU001" required>
+                        <p class="text-[9px] text-slate-400 mt-1">Format: STU followed by numbers (e.g., STU001, STU042)</p>
                     </div>
                     <div>
-                        <p class="text-[9px] text-slate-400 uppercase tracking-wider mb-1">Password</p>
-                        <div class="flex items-center gap-2 p-2.5 bg-white rounded-xl border border-slate-200">
-                            <span id="displayPassword" class="text-xs font-mono font-bold text-amber-600 flex-1"></span>
-                            <button type="button" onclick="copyText('password')" id="copyPasswordBtn" class="text-slate-400 hover:text-amber-600 transition"><i class="fa-regular fa-copy text-xs"></i></button>
-                        </div>
+                        <label class="text-[9px] text-slate-400 uppercase tracking-wider mb-1.5 block">Password <span class="text-red-500">*</span></label>
+                        <input type="text" id="manualPassword" name="manualPassword" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-200 focus:border-blue-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition" placeholder="Enter a secure password" required>
                     </div>
                 </div>
-                <button type="button" onclick="regenerateCredentials()" class="w-full py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-800 text-[10px] font-semibold transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-rotate"></i> Regenerate Credentials
-                </button>
+            </div>
+            <!-- Manual Credentials Entry Banner (Mentors) -->
+            <div id="manualMentorCredentialsBanner" class="hidden p-4 rounded-2xl bg-purple-50 border border-purple-200 space-y-3">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-purple-600 flex items-center gap-2"><i class="fa-solid fa-keyboard"></i> Manual Login Credentials</p>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-[9px] text-slate-400 uppercase tracking-wider mb-1.5 block">Mentor ID <span class="text-red-500">*</span></label>
+                        <input type="text" id="manualMentorId" name="manualMentorId" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-200 focus:border-purple-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-purple-500 transition" placeholder="e.g. MNT001 or MTU222" required>
+                        <p class="text-[9px] text-slate-400 mt-1">Format: MNT or MTU followed by numbers (e.g., MNT001, MTU222)</p>
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-400 uppercase tracking-wider mb-1.5 block">Password <span class="text-red-500">*</span></label>
+                        <input type="text" id="manualMentorPassword" name="manualMentorPassword" class="w-full px-3 py-2 bg-white rounded-xl border border-slate-200 focus:border-purple-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-purple-500 transition" placeholder="Enter a secure password" required>
+                    </div>
+                </div>
             </div>
             <!-- Form Fields -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="sm:col-span-2">
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Full Name <span class="text-red-500">*</span></label>
-                    <input type="text" id="accountFieldName" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="e.g. Ramesh Shrestha" required>
+                    <input type="text" id="accountFieldName" name="accountFieldName" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="e.g. Ramesh Shrestha" required>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Email Address <span class="text-red-500">*</span></label>
-                    <input type="email" id="accountFieldEmail" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="email@example.com" required>
+                    <input type="email" id="accountFieldEmail" name="accountFieldEmail" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="email@example.com" required>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Phone Number <span class="text-red-500">*</span></label>
-                    <input type="tel" id="accountFieldPhone" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="98XXXXXXXX" required>
+                    <input type="tel" id="accountFieldPhone" name="accountFieldPhone" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="98XXXXXXXX" required>
                 </div>
                 <div id="courseFieldWrap">
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Enrolled Course</label>
                     <select id="accountFieldCourse" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-red-500 transition">
                         <option value="">-- Select Course --</option>
                     </select>
-                </div>
-                <div id="trackFieldWrap" class="hidden">
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Specialization Track</label>
-                    <input type="text" id="accountFieldTrack" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="e.g. Cybersecurity, UI/UX">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Account Status</label>
@@ -774,9 +778,9 @@
                         <option value="Suspended">Suspended</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Custom Password <span class="text-slate-400">(optional)</span></label>
-                    <input type="text" id="accountFieldCustomPw" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="Leave blank to keep generated">
+                <div id="trackFieldWrap" class="hidden">
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Specialization Track</label>
+                    <input type="text" id="accountFieldTrack" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-red-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition" placeholder="e.g. Cybersecurity, UI/UX">
                 </div>
             </div>
             <div class="flex gap-3 pt-2">
@@ -842,6 +846,46 @@
     </div>
 </div>
 
+<!-- ===== MANUAL ENROLLMENT CREDENTIALS MODAL ===== -->
+<div id="manualEnrollmentModalOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[115] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div id="manualEnrollmentModalBox" class="w-full max-w-md bg-white border border-slate-200 rounded-3xl shadow-2xl p-7 scale-[0.95] transition-all duration-300">
+        <div class="flex justify-between items-center pb-4 mb-5 border-b border-slate-100">
+            <h3 class="text-base font-bold text-slate-900 heading-font flex items-center gap-2">
+                <i class="fa-solid fa-keyboard text-blue-600"></i> Manual Student Credentials
+            </h3>
+            <button onclick="closeManualEnrollmentModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+        <div class="mb-5 p-4 rounded-2xl bg-blue-50 border border-blue-200 text-xs text-blue-800">
+            <p class="font-semibold"><i class="fa-solid fa-circle-info mr-1.5"></i> Enter Manual Login Credentials</p>
+            <p class="mt-1.5 text-blue-700">These credentials will be used by the student to log in to their portal. Make sure to use a secure password.</p>
+        </div>
+        <form id="manualEnrollmentForm" onsubmit="handleManualEnrollmentSubmit(event)" class="space-y-4">
+            <input type="hidden" id="manualEnrollmentIndex">
+            <div>
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Student ID <span class="text-red-500">*</span></label>
+                <input type="text" id="manualEnrollmentStudentId" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-blue-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition" placeholder="e.g. STU001" required>
+                <p class="text-[9px] text-slate-400 mt-1">Format: STU followed by numbers (e.g., STU001, STU042)</p>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Password <span class="text-red-500">*</span></label>
+                <input type="text" id="manualEnrollmentPassword" class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-blue-500 text-slate-800 text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition" placeholder="Enter a secure password" required>
+                <p class="text-[9px] text-slate-400 mt-1">Minimum 6 characters recommended</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 mt-4">
+                <p class="text-[9px] font-semibold text-slate-600 mb-2">Student Name: <span id="manualEnrollmentStudentName" class="text-slate-800"></span></p>
+                <p class="text-[9px] font-semibold text-slate-600 mb-2">Course: <span id="manualEnrollmentCourse" class="text-slate-800"></span></p>
+                <p class="text-[9px] font-semibold text-slate-600">Email: <span id="manualEnrollmentEmail" class="text-slate-800"></span></p>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="closeManualEnrollmentModal()" class="flex-1 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 text-xs font-semibold transition">Cancel</button>
+                <button type="submit" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-700 to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white text-xs font-bold shadow-lg border border-blue-600/10 transition"><i class="fa-solid fa-user-check mr-1"></i> Create Account</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- =====================================================================
      JAVASCRIPT  (plain script - works on file:// without CORS issues)
 ====================================================================== -->
@@ -877,7 +921,7 @@
 
     // ===== INIT: show login or dashboard =====
     function initPage() {
-        if (localStorage.getItem('mentorGuruAdmin') === 'true') {
+        if (sessionStorage.getItem('mentorGuruAdmin') === 'true') {
             showDashboard();
         } else {
             showLogin();
@@ -918,7 +962,7 @@
         if (!user || !pass) { showLoginError('Administrative fields cannot be left blank.'); return; }
 
         if (user === 'Suzzan9' && pass === 'Suzzan999') {
-            localStorage.setItem('mentorGuruAdmin', 'true');
+            sessionStorage.setItem('mentorGuruAdmin', 'true');
             showDashboard();
         } else {
             showLoginError('Access Denied: Invalid Administrative Tokens.');
@@ -936,7 +980,7 @@
 
     // ===== LOGOUT =====
     function logoutAdmin() {
-        localStorage.removeItem('mentorGuruAdmin');
+        sessionStorage.removeItem('mentorGuruAdmin');
         showLogin();
         document.getElementById('adminLoginForm').reset();
         document.getElementById('loginAlertBanner').classList.add('hidden');
@@ -1274,58 +1318,8 @@
             return;
         }
 
-        // Generate new credentials
-        const students   = lsGet(LS_STUDENTS, []);
-        const num        = String(students.length + 1).padStart(3, '0');
-        const newLoginId = 'STU' + num;
-        const newPw      = 'Guru@' + Math.random().toString(36).slice(2, 7).toUpperCase();
-
-        // Create student account
-        const newStudent = {
-            name:         enroll.name,
-            email:        enroll.email,
-            phone:        enroll.phone,
-            course:       enroll.course,
-            status:       'Active',
-            role:         'Student',
-            loginId:      newLoginId,
-            password:     newPw,
-            registeredAt: new Date().toISOString(),
-            track:        ''
-        };
-        students.push(newStudent);
-        lsSet(LS_STUDENTS, students);
-
-        // Mark enrollment as having a Student ID
-        enrollments[idx].studentIdAssigned = newLoginId;
-        enrollments[idx].studentPassword   = newPw;
-        enrollments[idx].status            = 'Approved';
-        lsSet(LS_ENROLLMENTS, enrollments);
-
-        loadSystemData();
-
-        // Show credentials modal
-        const newStudArr = lsGet(LS_STUDENTS, []);
-        const newStudIdx = newStudArr.length - 1;
-        document.getElementById('credModalRole').value = 'Student';
-        document.getElementById('credModalAccountIdx').value = newStudIdx;
-        document.getElementById('credModalTitle').textContent = 'Student ID Generated!';
-        document.getElementById('credModalSubtitle').textContent = enroll.name + ' — Student Account Created';
-        document.getElementById('credModalLoginId').textContent  = newLoginId;
-        document.getElementById('credModalPassword').textContent = newPw;
-        // Reset edit rows
-        document.getElementById('credLoginIdViewRow').classList.remove('hidden');
-        document.getElementById('credLoginIdEditRow').classList.add('hidden');
-        document.getElementById('credPasswordViewRow').classList.remove('hidden');
-        document.getElementById('credPasswordEditRow').classList.add('hidden');
-        document.getElementById('credModalIcon').innerHTML = '<i class="fa-solid fa-id-card"></i>';
-        document.getElementById('credModalIcon').className = 'w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-2xl mx-auto mb-3';
-        const cOverlay = document.getElementById('credentialsModalOverlay');
-        const cBox     = document.getElementById('credentialsModalBox');
-        cOverlay.classList.remove('opacity-0', 'pointer-events-none');
-        cBox.classList.remove('scale-[0.95]');
-        cBox.classList.add('scale-100');
-        showNotification('Student ID Generated', newLoginId + ' assigned to ' + enroll.name + '.');
+        // Open manual enrollment modal for admin to enter credentials
+        openManualEnrollmentModal(idx);
     }
 
     function deleteEnrollment(idx) {
@@ -1337,6 +1331,97 @@
         lsSet(LS_ENROLLMENTS, enrollments);
         loadSystemData();
         showNotification('Enrollment Removed', enroll.name + "'s enrollment has been deleted.", false);
+    }
+
+    function openManualEnrollmentModal(idx) {
+        const enrollments = lsGet(LS_ENROLLMENTS, []);
+        const enroll = enrollments[idx];
+        if (!enroll) return;
+
+        // Populate modal with enrollment data
+        document.getElementById('manualEnrollmentIndex').value = idx;
+        document.getElementById('manualEnrollmentStudentName').textContent = enroll.name;
+        document.getElementById('manualEnrollmentCourse').textContent = enroll.course;
+        document.getElementById('manualEnrollmentEmail').textContent = enroll.email;
+        document.getElementById('manualEnrollmentStudentId').value = '';
+        document.getElementById('manualEnrollmentPassword').value = '';
+
+        // Open modal
+        const overlay = document.getElementById('manualEnrollmentModalOverlay');
+        const box = document.getElementById('manualEnrollmentModalBox');
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        box.classList.remove('scale-[0.95]');
+        box.classList.add('scale-100');
+
+        // Focus on first input
+        setTimeout(() => document.getElementById('manualEnrollmentStudentId').focus(), 100);
+    }
+
+    function closeManualEnrollmentModal() {
+        const overlay = document.getElementById('manualEnrollmentModalOverlay');
+        const box = document.getElementById('manualEnrollmentModalBox');
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        box.classList.remove('scale-100');
+        box.classList.add('scale-[0.95]');
+    }
+
+    function handleManualEnrollmentSubmit(e) {
+        e.preventDefault();
+
+        const enrollIdx = parseInt(document.getElementById('manualEnrollmentIndex').value);
+        const studentId = document.getElementById('manualEnrollmentStudentId').value.trim().toUpperCase();
+        const password = document.getElementById('manualEnrollmentPassword').value.trim();
+
+        // Validation
+        if (!studentId || !password) {
+            alert('Please enter both Student ID and Password.');
+            return;
+        }
+
+        if (!/^STU\d+$/.test(studentId)) {
+            alert('Student ID must start with STU followed by numbers (e.g., STU001).');
+            return;
+        }
+
+        // Check for duplicate Student ID
+        const students = lsGet(LS_STUDENTS, []);
+        if (students.some(s => s.loginId === studentId)) {
+            alert('Student ID already exists. Please use a different ID.');
+            return;
+        }
+
+        // Get enrollment data
+        const enrollments = lsGet(LS_ENROLLMENTS, []);
+        const enroll = enrollments[enrollIdx];
+        if (!enroll) return;
+
+        // Create student account with manual credentials
+        const newStudent = {
+            name: enroll.name,
+            email: enroll.email,
+            phone: enroll.phone,
+            course: enroll.course,
+            status: 'Active',
+            role: 'Student',
+            loginId: studentId,
+            password: password,
+            registeredAt: new Date().toISOString(),
+            track: ''
+        };
+        students.push(newStudent);
+        lsSet(LS_STUDENTS, students);
+
+        // Mark enrollment as having a Student ID
+        enrollments[enrollIdx].studentIdAssigned = studentId;
+        enrollments[enrollIdx].studentPassword = password;
+        enrollments[enrollIdx].status = 'Approved';
+        lsSet(LS_ENROLLMENTS, enrollments);
+
+        closeManualEnrollmentModal();
+        loadSystemData();
+
+        // Show success notification
+        showNotification('Account Created', 'Student ID ' + studentId + ' assigned to ' + enroll.name);
     }
 
     function filterEnrollmentsTable() {
@@ -1582,6 +1667,8 @@
         // Toggle fields by role
         document.getElementById('courseFieldWrap').classList.toggle('hidden', role === 'Mentor');
         document.getElementById('trackFieldWrap').classList.toggle('hidden', role === 'Student');
+        document.getElementById('manualCredentialsBanner').classList.toggle('hidden', role === 'Mentor');
+        document.getElementById('manualMentorCredentialsBanner').classList.toggle('hidden', role === 'Student');
 
         const isStudent = role === 'Student';
         document.getElementById('accountModalTitle').innerHTML =
@@ -1600,21 +1687,27 @@
                 document.getElementById('accountFieldEmail').value  = acct.email  || '';
                 document.getElementById('accountFieldPhone').value  = acct.phone  || '';
                 document.getElementById('accountFieldStatus').value = acct.status || 'Active';
-                if (role === 'Student') document.getElementById('accountFieldCourse').value = acct.course || '';
-                if (role === 'Mentor')  document.getElementById('accountFieldTrack').value  = acct.track  || '';
-                _currentGenLoginId  = acct.loginId  || '';
-                _currentGenPassword = acct.password || '';
-                document.getElementById('displayLoginId').textContent  = _currentGenLoginId;
-                document.getElementById('displayPassword').textContent = _currentGenPassword;
+                if (role === 'Student') {
+                    document.getElementById('accountFieldCourse').value = acct.course || '';
+                    document.getElementById('manualStudentId').value = acct.loginId || '';
+                    document.getElementById('manualPassword').value = acct.password || '';
+                }
+                if (role === 'Mentor') {
+                    document.getElementById('accountFieldTrack').value = acct.track || '';
+                    document.getElementById('manualMentorId').value = acct.loginId || '';
+                    document.getElementById('manualMentorPassword').value = acct.password || '';
+                }
             }
         } else {
-            // Create mode - generate credentials
-            _currentGenLoginId  = generateLoginId(role);
-            _currentGenPassword = generatePassword();
-            document.getElementById('displayLoginId').textContent  = _currentGenLoginId;
-            document.getElementById('displayPassword').textContent = _currentGenPassword;
+            // Create mode - clear fields
+            if (isStudent) {
+                document.getElementById('manualStudentId').value = '';
+                document.getElementById('manualPassword').value = '';
+            } else {
+                document.getElementById('manualMentorId').value = '';
+                document.getElementById('manualMentorPassword').value = '';
+            }
         }
-        document.getElementById('generatedCredsBanner').classList.remove('hidden');
 
         overlay.classList.remove('opacity-0', 'pointer-events-none');
         box.classList.remove('scale-[0.95]');
@@ -1637,19 +1730,49 @@
         const email = document.getElementById('accountFieldEmail').value.trim();
         const phone = document.getElementById('accountFieldPhone').value.trim();
         const status= document.getElementById('accountFieldStatus').value;
-        const customPw = document.getElementById('accountFieldCustomPw').value.trim();
         const course= role === 'Student' ? document.getElementById('accountFieldCourse').value : '';
         const track = role === 'Mentor'  ? document.getElementById('accountFieldTrack').value.trim() : '';
+
+        // Get manual credentials for students and mentors
+        let loginId = '';
+        let password = '';
+        
+        if (role === 'Student') {
+            loginId = document.getElementById('manualStudentId').value.trim().toUpperCase();
+            password = document.getElementById('manualPassword').value.trim();
+            
+            if (!loginId || !password) {
+                alert('Please enter both Student ID and Password.');
+                return;
+            }
+            
+            if (!/^STU\d+$/.test(loginId)) {
+                alert('Student ID must start with STU followed by numbers (e.g., STU001).');
+                return;
+            }
+        } else if (role === 'Mentor') {
+            loginId = document.getElementById('manualMentorId').value.trim().toUpperCase();
+            password = document.getElementById('manualMentorPassword').value.trim();
+            
+            if (!loginId || !password) {
+                alert('Please enter both Mentor ID and Password.');
+                return;
+            }
+            
+            if (!/^M(?:NT|TU)\d+$/.test(loginId)) {
+                alert('Mentor ID must start with MNT or MTU followed by numbers (e.g., MNT001 or MTU222).');
+                return;
+            }
+        }
 
         const lsKey = role === 'Student' ? LS_STUDENTS : LS_MENTORS;
         const arr   = lsGet(lsKey, []);
 
-        const finalPw = customPw || _currentGenPassword;
         const acct = {
             name, email, phone, status, course, track,
             role,
-            loginId:      _currentGenLoginId,
-            password:     finalPw,
+            loginId:      loginId || '',
+            password:     password || '',
             registeredAt: idx === '' ? new Date().toISOString() : (arr[parseInt(idx)] ? arr[parseInt(idx)].registeredAt : new Date().toISOString())
         };
 
@@ -1670,8 +1793,8 @@
             document.getElementById('credModalAccountIdx').value = newIdx;
             document.getElementById('credModalTitle').textContent = 'Account Created!';
             document.getElementById('credModalSubtitle').textContent = name + ' — ' + role + ' Account';
-            document.getElementById('credModalLoginId').textContent  = _currentGenLoginId;
-            document.getElementById('credModalPassword').textContent = finalPw;
+            document.getElementById('credModalLoginId').textContent  = loginId;
+            document.getElementById('credModalPassword').textContent = password;
             // Reset edit rows
             document.getElementById('credLoginIdViewRow').classList.remove('hidden');
             document.getElementById('credLoginIdEditRow').classList.add('hidden');
@@ -2143,6 +2266,9 @@
     window.regenerateCredentials           = regenerateCredentials;
     window.generateStudentIdFromEnrollment = generateStudentIdFromEnrollment;
     window.deleteEnrollment                = deleteEnrollment;
+    window.openManualEnrollmentModal       = openManualEnrollmentModal;
+    window.closeManualEnrollmentModal      = closeManualEnrollmentModal;
+    window.handleManualEnrollmentSubmit    = handleManualEnrollmentSubmit;
     window.filterEnrollmentsTable          = filterEnrollmentsTable;
 
     // Boot - call initPage directly (script is at bottom of body, DOM is ready)

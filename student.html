@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MentorGuru | Student Portal</title>
-    <meta name="description" content="MentorGuru Student Portal – Track your enrolled courses, progress, payments, and connect with your mentors.">
+    <title>GyanCode | Student Portal</title>
+    <meta name="description" content="GyanCode Student Portal – Track your enrolled courses, progress, payments, and connect with your mentors.">
+    <link rel="icon" type="image/x-icon" href="Logo/Logo_2-removebg-preview.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -188,7 +189,7 @@
     <script>
         // Simple student auth check (mirrors admin pattern using sessionStorage)
         if (!sessionStorage.getItem('mentorGuruStudent')) {
-            window.location.replace('login.html');
+            window.location.replace('student_login.html');
         }
     </script>
 
@@ -200,10 +201,10 @@
 
         <!-- Logo -->
         <div class="h-16 border-b border-gray-100 flex items-center px-6 gap-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-white flex items-center justify-center shadow-md shadow-red-200">
-                <i class="fa-solid fa-graduation-cap text-sm"></i>
+            <div class="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center">
+                <img src="Logo/Logo_2-removebg-preview.ico" alt="GyanCode" class="w-9 h-9 object-contain">
             </div>
-            <span class="text-lg font-bold text-gray-900">Mentor<span class="text-red-600">Guru</span></span>
+            <span class="text-lg font-bold text-gray-900">Gyan<span class="text-red-600">Code</span></span>
         </div>
 
         <!-- Student Profile Snippet -->
@@ -275,7 +276,7 @@
                 </button>
                 <div>
                     <h1 class="text-lg font-bold text-gray-900" id="studentViewHeader">My Dashboard</h1>
-                    <p class="text-xs text-gray-400 mt-0.5">MentorGuru Learning Hub</p>
+                    <p class="text-xs text-gray-400 mt-0.5">GyanCode Learning Hub</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -356,7 +357,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Enrolled Courses</p>
-                            <h3 class="text-3xl font-extrabold text-gray-900">2</h3>
+                            <h3 class="text-3xl font-extrabold text-gray-900" id="dashQuickEnrolledCount">2</h3>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center text-lg">
                             <i class="fa-solid fa-book"></i>
@@ -369,7 +370,7 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Sessions Attended</p>
-                            <h3 class="text-3xl font-extrabold text-gray-900">14</h3>
+                            <h3 class="text-3xl font-extrabold text-gray-900" id="dashQuickSessionsAttended">14</h3>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center text-lg">
                             <i class="fa-solid fa-calendar-check"></i>
@@ -382,13 +383,13 @@
                     <div class="flex justify-between items-start">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Next Class</p>
-                            <h3 class="text-xl font-extrabold text-gray-900">10 AM</h3>
+                            <h3 class="text-xl font-extrabold text-gray-900" id="dashQuickNextClassTime">10 AM</h3>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center text-lg">
                             <i class="fa-solid fa-clock"></i>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-400 mt-4"><i class="fa-solid fa-bell text-red-400 mr-1"></i> Tomorrow, Jun 1</p>
+                    <p class="text-xs text-gray-400 mt-4" id="dashQuickNextClassDate"><i class="fa-solid fa-bell text-red-400 mr-1"></i> Tomorrow, Jun 1</p>
                 </div>
 
                 <div class="stat-card border-t-4 border-t-red-300">
@@ -417,7 +418,7 @@
                         <button onclick="switchStudentView('mycourses')" class="text-xs text-red-600 font-semibold hover:underline">View All →</button>
                     </div>
                     <!-- Course 1 -->
-                    <div class="course-card-student">
+                    <div class="course-card-student" id="dashCourseCardCyber">
                         <div class="flex items-start justify-between gap-3 mb-3">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-lg flex-shrink-0">
@@ -440,7 +441,7 @@
                         </div>
                     </div>
                     <!-- Course 2 -->
-                    <div class="course-card-student">
+                    <div class="course-card-student" id="dashCourseCardPython">
                         <div class="flex items-start justify-between gap-3 mb-3">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center text-lg flex-shrink-0">
@@ -471,42 +472,7 @@
                             <i class="fa-solid fa-calendar-days text-red-500"></i> This Week
                         </h4>
                     </div>
-                    <div class="space-y-3">
-                        <div class="flex gap-3">
-                            <div class="timeline-dot"></div>
-                            <div>
-                                <p class="text-xs font-semibold text-gray-800">Mon, Jun 2 – 10:00 AM</p>
-                                <p class="text-[11px] text-gray-400">Cybersecurity · Session 9</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="timeline-dot" style="background:#6b7280; box-shadow:0 0 0 3px #f3f4f6;"></div>
-                            <div>
-                                <p class="text-xs font-semibold text-gray-800">Tue, Jun 3 – 4:00 PM</p>
-                                <p class="text-[11px] text-gray-400">Python · Session 15</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="timeline-dot"></div>
-                            <div>
-                                <p class="text-xs font-semibold text-gray-800">Wed, Jun 4 – 10:00 AM</p>
-                                <p class="text-[11px] text-gray-400">Cybersecurity · Session 10</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="timeline-dot" style="background:#6b7280; box-shadow:0 0 0 3px #f3f4f6;"></div>
-                            <div>
-                                <p class="text-xs font-semibold text-gray-800">Thu, Jun 5 – 4:00 PM</p>
-                                <p class="text-[11px] text-gray-400">Python · Session 16 (Final)</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="timeline-dot"></div>
-                            <div>
-                                <p class="text-xs font-semibold text-gray-800">Fri, Jun 6 – 10:00 AM</p>
-                                <p class="text-[11px] text-gray-400">Cybersecurity · Session 11</p>
-                            </div>
-                        </div>
+                    <div class="space-y-3" id="dashTimelineList">
                     </div>
                 </div>
             </div>
@@ -518,28 +484,7 @@
                         <i class="fa-solid fa-clock-rotate-left text-red-500"></i> Recent Activity
                     </h4>
                 </div>
-                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <div class="flex items-center gap-3 p-3 rounded-xl bg-green-50 border border-green-100">
-                        <div class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center"><i class="fa-solid fa-circle-check text-sm"></i></div>
-                        <div>
-                            <p class="text-xs font-semibold text-gray-800">Session Completed</p>
-                            <p class="text-[10px] text-gray-400">Python Session 14 · Today</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 p-3 rounded-xl bg-red-50 border border-red-100">
-                        <div class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center"><i class="fa-solid fa-file-arrow-down text-sm"></i></div>
-                        <div>
-                            <p class="text-xs font-semibold text-gray-800">Resource Downloaded</p>
-                            <p class="text-[10px] text-gray-400">Network Basics PDF · Yesterday</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3 p-3 rounded-xl bg-blue-50 border border-blue-100">
-                        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-wallet text-sm"></i></div>
-                        <div>
-                            <p class="text-xs font-semibold text-gray-800">Payment Submitted</p>
-                            <p class="text-[10px] text-gray-400">NPR 9,000 · May 20</p>
-                        </div>
-                    </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3" id="dashRecentActivityGrid">
                 </div>
             </div>
         </div>
@@ -805,18 +750,18 @@
             <div class="grid sm:grid-cols-3 gap-4">
                 <div class="stat-card border-t-4 border-t-red-500">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Total Fee</p>
-                    <h3 class="text-2xl font-extrabold text-gray-900">NPR 18,000</h3>
-                    <p class="text-xs text-gray-400 mt-3"><i class="fa-solid fa-info-circle text-red-400 mr-1"></i> Combined for 2 courses</p>
+                    <h3 class="text-2xl font-extrabold text-gray-900" id="totalFeeAmount">NPR 0</h3>
+                    <p class="text-xs text-gray-400 mt-3"><i class="fa-solid fa-info-circle text-red-400 mr-1"></i> For your requested/enrolled courses</p>
                 </div>
                 <div class="stat-card border-t-4 border-t-green-500">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Paid Amount</p>
-                    <h3 class="text-2xl font-extrabold text-gray-900">NPR 9,000</h3>
+                    <h3 class="text-2xl font-extrabold text-gray-900" id="paidFeeAmount">NPR 0</h3>
                     <p class="text-xs text-gray-400 mt-3"><i class="fa-solid fa-circle-check text-green-500 mr-1"></i> Received by MentorGuru</p>
                 </div>
                 <div class="stat-card border-t-4 border-t-yellow-500">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Due Amount</p>
-                    <h3 class="text-2xl font-extrabold text-gray-900">NPR 9,000</h3>
-                    <p class="text-xs text-gray-400 mt-3"><i class="fa-solid fa-clock text-yellow-500 mr-1"></i> Due by Jun 15, 2026</p>
+                    <h3 class="text-2xl font-extrabold text-gray-900" id="dueFeeAmount">NPR 0</h3>
+                    <p class="text-xs text-gray-400 mt-3"><i class="fa-solid fa-clock text-yellow-500 mr-1"></i> Pending verification</p>
                 </div>
             </div>
 
@@ -836,39 +781,7 @@
                                 <th class="px-4 py-3 font-semibold text-gray-500 text-xs uppercase tracking-wider rounded-r-xl">Status</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="px-4 py-3 text-xs text-gray-600">May 20, 2026</td>
-                                <td class="px-4 py-3 text-xs text-gray-800 font-medium">Cybersecurity Essentials</td>
-                                <td class="px-4 py-3 text-xs">
-                                    <span class="flex items-center gap-1.5"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/eSewa_logo.png/120px-eSewa_logo.png" class="h-4 object-contain" alt="eSewa"> eSewa</span>
-                                </td>
-                                <td class="px-4 py-3 text-xs font-bold text-gray-900">NPR 4,500</td>
-                                <td class="px-4 py-3"><span class="badge-green">Verified</span></td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="px-4 py-3 text-xs text-gray-600">May 20, 2026</td>
-                                <td class="px-4 py-3 text-xs text-gray-800 font-medium">Python for Beginners</td>
-                                <td class="px-4 py-3 text-xs">
-                                    <span class="flex items-center gap-1.5"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/eSewa_logo.png/120px-eSewa_logo.png" class="h-4 object-contain" alt="eSewa"> eSewa</span>
-                                </td>
-                                <td class="px-4 py-3 text-xs font-bold text-gray-900">NPR 4,500</td>
-                                <td class="px-4 py-3"><span class="badge-green">Verified</span></td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="px-4 py-3 text-xs text-gray-600">Jun 15, 2026</td>
-                                <td class="px-4 py-3 text-xs text-gray-800 font-medium">Cybersecurity Essentials</td>
-                                <td class="px-4 py-3 text-xs text-gray-400">—</td>
-                                <td class="px-4 py-3 text-xs font-bold text-gray-900">NPR 4,500</td>
-                                <td class="px-4 py-3"><span class="badge-yellow">Pending</span></td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 transition">
-                                <td class="px-4 py-3 text-xs text-gray-600">Jun 15, 2026</td>
-                                <td class="px-4 py-3 text-xs text-gray-800 font-medium">Python for Beginners</td>
-                                <td class="px-4 py-3 text-xs text-gray-400">—</td>
-                                <td class="px-4 py-3 text-xs font-bold text-gray-900">NPR 4,500</td>
-                                <td class="px-4 py-3"><span class="badge-yellow">Pending</span></td>
-                            </tr>
+                        <tbody class="divide-y divide-gray-100" id="studentPaymentsTableBody">
                         </tbody>
                     </table>
                 </div>
@@ -890,63 +803,10 @@
             <div class="glass-card rounded-2xl p-6 space-y-5">
                 <div class="flex items-center justify-between pb-4 border-b border-gray-100">
                     <h4 class="font-bold text-gray-800">June 2026 · Week View</h4>
-                    <div class="flex gap-3 text-xs">
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-red-200 inline-block"></span> Cybersecurity</span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-gray-300 inline-block"></span> Python</span>
+                    <div class="flex gap-3 text-xs" id="weeklyScheduleLegend">
                     </div>
                 </div>
-                <div class="grid grid-cols-5 gap-3">
-                    <!-- Days -->
-                    <div class="space-y-2">
-                        <div class="text-center">
-                            <p class="text-xs font-bold text-gray-500 uppercase">Mon</p>
-                            <p class="text-lg font-extrabold text-gray-900">2</p>
-                        </div>
-                        <div class="bg-red-100 border border-red-200 rounded-xl p-2.5 text-center">
-                            <p class="text-[10px] font-bold text-red-700">10–11 AM</p>
-                            <p class="text-[10px] text-red-600 mt-0.5">Cyber · S9</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="text-center">
-                            <p class="text-xs font-bold text-gray-500 uppercase">Tue</p>
-                            <p class="text-lg font-extrabold text-gray-900">3</p>
-                        </div>
-                        <div class="bg-gray-100 border border-gray-200 rounded-xl p-2.5 text-center">
-                            <p class="text-[10px] font-bold text-gray-700">4–5 PM</p>
-                            <p class="text-[10px] text-gray-600 mt-0.5">Python · S15</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="text-center">
-                            <p class="text-xs font-bold text-gray-500 uppercase">Wed</p>
-                            <p class="text-lg font-extrabold text-gray-900">4</p>
-                        </div>
-                        <div class="bg-red-100 border border-red-200 rounded-xl p-2.5 text-center">
-                            <p class="text-[10px] font-bold text-red-700">10–11 AM</p>
-                            <p class="text-[10px] text-red-600 mt-0.5">Cyber · S10</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="text-center">
-                            <p class="text-xs font-bold text-gray-500 uppercase">Thu</p>
-                            <p class="text-lg font-extrabold text-gray-900">5</p>
-                        </div>
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-2.5 text-center">
-                            <p class="text-[10px] font-bold text-yellow-700">4–5 PM</p>
-                            <p class="text-[10px] text-yellow-600 mt-0.5">Python · S16 🎓</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="text-center">
-                            <p class="text-xs font-bold text-gray-500 uppercase">Fri</p>
-                            <p class="text-lg font-extrabold text-gray-900">6</p>
-                        </div>
-                        <div class="bg-red-100 border border-red-200 rounded-xl p-2.5 text-center">
-                            <p class="text-[10px] font-bold text-red-700">10–11 AM</p>
-                            <p class="text-[10px] text-red-600 mt-0.5">Cyber · S11</p>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-5 gap-3" id="weeklyScheduleGrid">
                 </div>
             </div>
 
@@ -955,31 +815,7 @@
                 <h4 class="font-bold text-gray-800 flex items-center gap-2 pb-4 border-b border-gray-100">
                     <i class="fa-solid fa-bell text-red-500"></i> Upcoming Reminders
                 </h4>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-4 p-3 bg-red-50 rounded-xl border border-red-100">
-                        <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-red-600"><i class="fa-solid fa-shield-halved"></i></div>
-                        <div class="flex-grow">
-                            <p class="text-sm font-semibold text-gray-800">Cybersecurity Session 9</p>
-                            <p class="text-xs text-gray-400">Monday, Jun 2 · 10:00 AM – 11:00 AM · Physical</p>
-                        </div>
-                        <span class="badge-red">Tomorrow</span>
-                    </div>
-                    <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                        <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-gray-600"><i class="fa-brands fa-python"></i></div>
-                        <div class="flex-grow">
-                            <p class="text-sm font-semibold text-gray-800">Python Session 15</p>
-                            <p class="text-xs text-gray-400">Tuesday, Jun 3 · 4:00 PM – 5:00 PM · Online</p>
-                        </div>
-                        <span class="badge-gray">2 Days</span>
-                    </div>
-                    <div class="flex items-center gap-4 p-3 bg-yellow-50 rounded-xl border border-yellow-100">
-                        <div class="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center text-yellow-600"><i class="fa-brands fa-python"></i></div>
-                        <div class="flex-grow">
-                            <p class="text-sm font-semibold text-gray-800">Python Final Session 16 🎓</p>
-                            <p class="text-xs text-gray-400">Thursday, Jun 5 · 4:00 PM – 5:00 PM · Online</p>
-                        </div>
-                        <span class="badge-yellow">Final</span>
-                    </div>
+                <div class="space-y-3" id="upcomingRemindersList">
                 </div>
             </div>
         </div>
@@ -1166,6 +1002,18 @@
             </div>
         </div>
 
+        <!-- ===== CHAT VIEW ===== -->
+        <div id="sview-chat" class="student-view hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 text-center">
+                <i class="fa-solid fa-comments text-5xl text-red-400 mb-4 block"></i>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Open Messaging Center</h3>
+                <p class="text-gray-600 text-sm mb-6">Connect with your mentors and classmates in real-time</p>
+                <a href="chat.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg font-semibold transition">
+                    <i class="fa-solid fa-comments"></i> Go to Messaging Center
+                </a>
+            </div>
+        </div>
+
         </div><!-- /p-6 wrapper -->
     </main>
 
@@ -1221,25 +1069,18 @@
     let resourcesCache = [];
 
     // ========= BOOT =========
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            currentUser = user;
-            await loadFirestoreData();
-        } else {
-            // fallback if using generic login
-            const session = sessionStorage.getItem('mentorGuruStudent');
-            if (!session) {
-                window.location.replace('login.html');
-            } else {
-                currentProfile = JSON.parse(session);
-                if (!currentProfile.joinDate) {
-                    currentProfile.joinDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-                }
-                applyProfileToUI();
-                await loadMockData();
-            }
+    // ========= BOOT =========
+    const session = sessionStorage.getItem('mentorGuruStudent');
+    if (!session) {
+        window.location.replace('student_login.html');
+    } else {
+        currentProfile = JSON.parse(session);
+        if (!currentProfile.joinDate) {
+            currentProfile.joinDate = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
         }
-    });
+        applyProfileToUI();
+        await loadMockData();
+    }
 
     async function loadFirestoreData() {
         try {
@@ -1323,6 +1164,80 @@
         
         renderStudentCourses();
         renderStudentResources();
+        renderStudentPayments();
+    }
+
+    function parseFee(feeStr) {
+        if (!feeStr) return 0;
+        const num = parseInt(feeStr.replace(/[^\d]/g, ''));
+        return isNaN(num) ? 0 : num;
+    }
+
+    function renderStudentPayments() {
+        const tbody = document.getElementById('studentPaymentsTableBody');
+        if (!tbody) return;
+
+        // Filter student's enrollments
+        const allEnrollments = JSON.parse(localStorage.getItem('mentorGuru_enrollments') || '[]');
+        const myEnrollments = allEnrollments.filter(app => app.email.toLowerCase() === (currentProfile.email || '').toLowerCase());
+
+        // Also check if they have a course assigned directly in their profile which isn't in myEnrollments
+        if (currentProfile.course && currentProfile.status === 'Active') {
+            const exists = myEnrollments.find(e => e.course === currentProfile.course);
+            if (!exists) {
+                myEnrollments.push({
+                    course: currentProfile.course,
+                    status: 'Approved',
+                    paymentStatus: 'Paid',
+                    timestamp: new Date().toISOString()
+                });
+            }
+        }
+
+        tbody.innerHTML = '';
+        
+        let totalFee = 0;
+        let paidAmount = 0;
+        let dueAmount = 0;
+
+        if (myEnrollments.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-xs text-gray-400">No payment records found.</td></tr>`;
+            document.getElementById('totalFeeAmount').textContent = 'NPR 0';
+            document.getElementById('paidFeeAmount').textContent = 'NPR 0';
+            document.getElementById('dueFeeAmount').textContent = 'NPR 0';
+            return;
+        }
+
+        myEnrollments.forEach(app => {
+            const course = coursesCache.find(c => c.name === app.course);
+            const feeStr = course ? course.fee : 'NPR 0';
+            const feeVal = parseFee(feeStr);
+
+            totalFee += feeVal;
+            if (app.paymentStatus === 'Paid') {
+                paidAmount += feeVal;
+            } else {
+                dueAmount += feeVal;
+            }
+
+            const dateStr = app.timestamp ? new Date(app.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
+            const method = app.paymentStatus === 'Paid' ? '<span class="flex items-center gap-1.5"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/eSewa_logo.png/120px-eSewa_logo.png" class="h-4 object-contain" alt="eSewa"> eSewa</span>' : '—';
+            const statusBadge = app.paymentStatus === 'Paid' ? '<span class="badge-green">Verified</span>' : '<span class="badge-yellow">Pending</span>';
+
+            tbody.innerHTML += `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-4 py-3 text-xs text-gray-600">${escHTML(dateStr)}</td>
+                    <td class="px-4 py-3 text-xs text-gray-800 font-medium">${escHTML(app.course)}</td>
+                    <td class="px-4 py-3 text-xs">${method}</td>
+                    <td class="px-4 py-3 text-xs font-bold text-gray-900">${escHTML(feeStr)}</td>
+                    <td class="px-4 py-3">${statusBadge}</td>
+                </tr>
+            `;
+        });
+
+        document.getElementById('totalFeeAmount').textContent = 'NPR ' + totalFee.toLocaleString();
+        document.getElementById('paidFeeAmount').textContent = 'NPR ' + paidAmount.toLocaleString();
+        document.getElementById('dueFeeAmount').textContent = 'NPR ' + dueAmount.toLocaleString();
     }
 
     // ========= INIT UI FROM PROFILE =========
@@ -1539,6 +1454,7 @@
         if (viewName === 'profile')   { renderStudentCourses(); applyProfileToUI(); }
         if (viewName === 'requests')  { renderCourseRequestForm(); renderCourseRequestsList(); }
         if (viewName === 'chat')      { renderChatContacts(); }
+        if (viewName === 'payments')  renderStudentPayments();
     }
 
     // ========= COURSE REQUESTS =========

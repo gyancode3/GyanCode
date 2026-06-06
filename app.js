@@ -216,8 +216,8 @@ function renderPublicCourses() {
     const courses = coursesCache;
     const filtered = courses.filter(c => {
         if (activeFilter === 'all') return true;
-        if (activeFilter === 'IT') return c.category === 'IT';
-        if (activeFilter === 'Non-IT') return c.category === 'Non-IT';
+        if (activeFilter === 'Online') return (c.mode || '').toLowerCase() === 'online';
+        if (activeFilter === 'Physical') return (c.mode || '').toLowerCase() === 'physical';
         return true;
     });
     
@@ -267,7 +267,7 @@ function renderPublicCourses() {
 
 function switchCategory(cat) {
     activeFilter = cat;
-    ['all', 'IT', 'Non-IT'].forEach(c => {
+    ['all', 'Online', 'Physical'].forEach(c => {
         const btn = document.getElementById(`tab-${c}`);
         if (btn) {
             if (c === cat) {

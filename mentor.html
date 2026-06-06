@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MentorGuru | Mentor Desk</title>
-    <meta name="description" content="MentorGuru Mentor Portal – Manage your assigned cohorts, evaluate student progress, log attendance, and manage educational resources.">
+    <title>GyanCode | Mentor Desk</title>
+    <meta name="description" content="GyanCode Mentor Portal – Manage your assigned cohorts, evaluate student progress, log attendance, and manage educational resources.">
+    <link rel="icon" type="image/x-icon" href="Logo/Logo_2-removebg-preview.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -65,7 +66,7 @@
     <!-- =================== AUTH GUARD =================== -->
     <script>
         if (!sessionStorage.getItem('mentorGuruMentor')) {
-            window.location.replace('login.html');
+            window.location.replace('mentor_login.html');
         }
     </script>
 
@@ -76,10 +77,10 @@
     <aside id="mentorSidebar" class="w-64 bg-white border-r border-gray-200 flex flex-col z-20 flex-shrink-0 shadow-sm">
         <!-- Logo -->
         <div class="h-16 border-b border-gray-100 flex items-center px-6 gap-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-white flex items-center justify-center shadow-md shadow-red-200">
-                <i class="fa-solid fa-graduation-cap text-sm"></i>
+            <div class="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center">
+                <img src="Logo/Logo_2-removebg-preview.ico" alt="GyanCode" class="w-9 h-9 object-contain">
             </div>
-            <span class="text-lg font-bold text-gray-900">Mentor<span class="text-red-600">Guru</span></span>
+            <span class="text-lg font-bold text-gray-900">Gyan<span class="text-red-600">Code</span></span>
         </div>
 
         <!-- Profile Snippet -->
@@ -404,6 +405,18 @@
                 </div>
             </div>
 
+            <!-- ===== CHAT VIEW ===== -->
+            <div id="mview-chat" class="mentor-view hidden space-y-6">
+                <div class="bg-white rounded-2xl p-6 text-center">
+                    <i class="fa-solid fa-comments text-5xl text-red-400 mb-4 block"></i>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Open Messaging Center</h3>
+                    <p class="text-gray-600 text-sm mb-6">Create group chats, manage student conversations, and share resources</p>
+                    <a href="chat.html" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg font-semibold transition">
+                        <i class="fa-solid fa-comments"></i> Go to Messaging Center
+                    </a>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -509,7 +522,7 @@
             // fallback if using generic login
             const session = sessionStorage.getItem('mentorGuruMentor');
             if (!session) {
-                window.location.replace('login.html');
+                window.location.replace('mentor_login.html');
             } else {
                 mentorProfile = JSON.parse(session);
                 bootMentorPortal();

@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MentorGuru | Admin Command Node</title>
-    <meta name="description" content="Secure administrative gateway for MentorGuru operations control center.">
+    <title>GyanCode | Admin Command Node</title>
+    <meta name="description" content="Secure administrative gateway for GyanCode operations control center.">
+    <link rel="icon" type="image/x-icon" href="Logo/Logo_2-removebg-preview.ico">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -62,7 +63,7 @@
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
             <h1 class="text-xl font-bold tracking-tight text-slate-900 heading-font uppercase">SOC Command Node</h1>
-            <p class="text-xs text-red-600 mt-1 uppercase tracking-widest">MentorGuru Security Operations Center</p>
+            <p class="text-xs text-red-600 mt-1 uppercase tracking-widest">GyanCode Security Operations Center</p>
         </div>
 
         <div id="alertBanner" class="hidden mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-center gap-3">
@@ -102,7 +103,7 @@
 
     <script>
         // If already logged in, skip straight to admin dashboard
-        if (localStorage.getItem('mentorGuruAdmin') === 'true') {
+        if (sessionStorage.getItem('mentorGuruAdmin') === 'true') {
             window.location.replace('admin.html');
         }
 
@@ -143,8 +144,8 @@
             }
 
             if (username === 'Suzzan9' && password === 'Suzzan999') {
-                // Store auth in localStorage (works reliably on file:// protocol)
-                localStorage.setItem('mentorGuruAdmin', 'true');
+                // Store auth in sessionStorage (clears when browser/tab closes)
+                sessionStorage.setItem('mentorGuruAdmin', 'true');
 
                 // Visual feedback
                 var btn = document.getElementById('submitBtn');
